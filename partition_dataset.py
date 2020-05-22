@@ -21,7 +21,7 @@ for label in LABELS:
     shuffle(datapoints[label])  # comment this out to achieve a deterministic partitioning algorithm
     results["dev"].extend(datapoints[label][0:DEV_SIZE[label]])
     results["test"].extend(datapoints[label][DEV_SIZE[label]:DEV_SIZE[label] + TEST_SIZE[label]])
-    # results["train"].extend(datapoints[label][DEV_SIZE[label] + TEST_SIZE[label]:])
+    results["train"].extend(datapoints[label][DEV_SIZE[label] + TEST_SIZE[label]:])
 
 for dataset in ("dev", "test", "train"):
     shuffle(results[dataset])
