@@ -1,0 +1,1 @@
+wget http://download.wikimedia.org/${1:-cs}wiki/latest/${1:-cs}wiki-latest-pages-articles.xml.bz2 -P ../data
