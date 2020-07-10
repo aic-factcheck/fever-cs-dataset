@@ -1,4 +1,4 @@
-# Scripts to opbtain the Czech Fever dataset
+# Scripts to obtain the Czech Wiki & Fever dataset
 ## Building data from scratch
 Basic usage:
 ```
