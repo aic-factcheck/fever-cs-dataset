@@ -9,4 +9,5 @@ nltk
 pytz
 tensorboard-pytorch
 spacy
+pathlib
 git+git://github.com/j6mes/drqa@parallel
