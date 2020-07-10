@@ -4,7 +4,12 @@ import os
 import sys
 import unicodedata
 from pathlib import Path
+import nltk
 
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 from nltk.tokenize import word_tokenize, sent_tokenize
 
 VOID, TITLE, ABSTRACT = 0, 1, 2
