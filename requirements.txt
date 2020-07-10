@@ -1,1 +1,12 @@
 wikiextractor=0.1
+numpy
+scipy
+scikit-learn
+typing
+overrides
+tqdm
+nltk
+pytz
+tensorboard-pytorch
+spacy
+git+git://github.com/j6mes/drqa@parallel
