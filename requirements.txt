@@ -1,4 +1,4 @@
-wikiextractor=0.1
+wikiextractor==0.1
 numpy
 scipy
 scikit-learn
