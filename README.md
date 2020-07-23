@@ -9,8 +9,16 @@ pip install -r requirements.txt
 ```
 builds a fresh version of **FEVERcs** dataset using the latest available **cswiki** dump and latest stable version of the building scripts
 
+
 ## Download pre-built dataset
-Basic (Docker-friendly) usage:
+### Embed the latest dataset within a Docker image
+Using `wget` from `Dockerfile`, unpacking the contents into `/local/fever-common/data`:
+```dockerfile
+RUN wget "https://raw.githubusercontent.com/heruberuto/fever-cs-dataset/master/download_prebuilt.sh" -O download_prebuilt.sh && /bin/bash download_prebuilt.sh /local/fever-common/data
+```
+
+### Using locally
+Basic usage:
 
 ```
 git clone https://github.com/heruberuto/fever-cs-baseline
