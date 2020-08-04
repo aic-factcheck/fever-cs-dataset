@@ -39,7 +39,7 @@ if __name__ == '__main__':
             if reading == VOID and is_article_beginning(line):
                 reading = TITLE
             elif reading == TITLE:
-                title = unicodedata.normalize('NFKC', line).strip()
+                title = unicodedata.normalize('NFD', line).strip()
                 reading = ABSTRACT
             elif reading and is_abstract_ending(line):
                 reading = VOID
@@ -58,4 +58,4 @@ if __name__ == '__main__':
                     print(abstract, file=sys.stderr)
                 abstract = ""
             elif reading == ABSTRACT:
-                abstract += unicodedata.normalize('NFKC', line)
+                abstract += unicodedata.normalize('NFD', line)
