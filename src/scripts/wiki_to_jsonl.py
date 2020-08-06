@@ -30,7 +30,13 @@ if __name__ == '__main__':
     parser.add_argument('target_file', nargs='?', type=str, help='/path/to/target.jsonl',
                         default='../data/wiki-pages/cswiki-001.jsonl')
     parser.add_argument('--language', type=str, default='czech')
+    parser.add_argument("-f", "--full", action="store_true", help="Include the full article body.")
+    parser.add_argument("-t", "--titles", action="store_true", help="Append the article title to every sentence of the article.")
+    parser.add_argument("-s", "--skip-tokenization", action="store_true", help="Skip word tokenization and store untokenized sentences.")
+
     args = parser.parse_args()
+    print(args.full,args.titles,args.skip_tokenization)
+    exit()
     Path(args.target_file).parent.mkdir(parents=True, exist_ok=True)
 
     reading, abstract, title = VOID, "", None
