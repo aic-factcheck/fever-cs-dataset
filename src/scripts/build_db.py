@@ -98,12 +98,22 @@ def store_contents(data_path, save_path, preprocess, num_workers=None):
     conn = sqlite3.connect(save_path)
     c = conn.cursor()
     c.execute("CREATE TABLE documents (id PRIMARY KEY, text, lines);")
-
     workers = ProcessPool(num_workers, initializer=init, initargs=(preprocess,))
     files = [f for f in iter_files(data_path)]
     count = 0
+    idset = set()
     with tqdm(total=len(files)) as pbar:
         for pairs in tqdm(workers.imap_unordered(get_contents, files)):
+            npairs = []
+            for pair in pairs:
+                pid = pair[0]
+                if pid in idset:
+                    logger.warn(" page id duplicate: {}".format(pid))  # seems to happen for EN Wiki
+                else:
+                    idset.add(pid)
+                    npairs.append(pair)
+
+            pairs = npairs
             count += len(pairs)
             c.executemany("INSERT INTO documents VALUES (?,?,?)", pairs)
             pbar.update()
