@@ -55,6 +55,9 @@ if __name__ == '__main__':
                                  for sentence in sent_tokenize(abstract, "czech")]
                     if len(sentences) < 1 or len(title) < 1:
                         continue
+                    if args.titles:
+                        sentences = ["[{}]".format(title)] + sentences
+
                     print(json.dumps({
                         "id": title,
                         "text": " ".join(sentences),
