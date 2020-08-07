@@ -6,6 +6,7 @@ import unicodedata
 from pathlib import Path
 import nltk
 
+args = None
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -20,7 +21,7 @@ def is_article_beginning(line):
 
 
 def is_abstract_ending(line):
-    return line.startswith("Section::") or line.startswith("</doc")
+    return line.startswith("</doc") or (line.startswith("Section::") and not args.full)
 
 
 if __name__ == '__main__':
@@ -31,11 +32,13 @@ if __name__ == '__main__':
                         default='../data/wiki-pages/cswiki-001.jsonl')
     parser.add_argument('--language', type=str, default='czech')
     parser.add_argument("-f", "--full", action="store_true", help="Include the full article body.")
-    parser.add_argument("-t", "--titles", action="store_true", help="Append the article title to every sentence of the article.")
-    parser.add_argument("-s", "--skip-tokenization", action="store_true", help="Skip word tokenization and store untokenized sentences.")
+    parser.add_argument("-t", "--titles", action="store_true",
+                        help="Append the article title to every sentence of the article.")
+    parser.add_argument("-s", "--skip-tokenization", action="store_true",
+                        help="Skip word tokenization and store untokenized sentences.")
 
     args = parser.parse_args()
-    print(args.full,args.titles,args.skip_tokenization)
+    print(args.full, args.titles, args.skip_tokenization)
     exit()
     Path(args.target_file).parent.mkdir(parents=True, exist_ok=True)
 
@@ -56,7 +59,7 @@ if __name__ == '__main__':
                     if len(sentences) < 1 or len(title) < 1:
                         continue
                     if args.titles:
-                        sentences = ["[{}]".format(title)] + sentences
+                        sentences = ["[ {} ]".format(title)] + sentences
 
                     print(json.dumps({
                         "id": title,
