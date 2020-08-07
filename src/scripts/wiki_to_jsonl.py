@@ -39,7 +39,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     print(args.full, args.titles, args.skip_tokenization)
-    exit()
     Path(args.target_file).parent.mkdir(parents=True, exist_ok=True)
 
     reading, abstract, title = VOID, "", None
@@ -53,8 +52,8 @@ if __name__ == '__main__':
             elif reading and is_abstract_ending(line):
                 reading = VOID
                 try:
-                    sentences = [" ".join(word_tokenize(sentence, language=args.language))
-                                     .replace('„', "``").replace('“', "''").replace(" ( )", "")
+                    sentences = [sentence if args.skip_tokenization else (" ".join(word_tokenize(sentence, language=args.language))
+                                     .replace('„', "``").replace('“', "''").replace(" ( )", ""))
                                  for sentence in sent_tokenize(abstract, "czech")]
                     if len(sentences) < 1 or len(title) < 1:
                         continue
