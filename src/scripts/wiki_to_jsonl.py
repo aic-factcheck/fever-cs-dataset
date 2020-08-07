@@ -5,8 +5,10 @@ import sys
 import unicodedata
 from pathlib import Path
 import nltk
+from nltk import TreebankWordTokenizer
 
-args = None
+args, tokenizer = None, None
+
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -23,6 +25,13 @@ def is_article_beginning(line):
 def is_abstract_ending(line):
     return line.startswith("</doc") or (line.startswith("Section::") and not args.full)
 
+def tokenize(line):
+    global tokenizer
+    if args.ptb:
+        if tokenizer is None:
+            tokenizer = TreebankWordTokenizer()
+        return tokenizer.tokenize(line, convert_parentheses=True)
+    return word_tokenize(line, language=args.language)
 
 if __name__ == '__main__':
     print(os.getcwd())
@@ -36,6 +45,8 @@ if __name__ == '__main__':
                         help="Append the article title to every sentence of the article.")
     parser.add_argument("-s", "--skip-tokenization", action="store_true",
                         help="Skip word tokenization and store untokenized sentences.")
+    parser.add_argument("-p", "--ptb", action="store_true",
+                        help="Use Penn Treebank word tokenizer.")
 
     args = parser.parse_args()
     print(args.full, args.titles, args.skip_tokenization)
@@ -52,7 +63,7 @@ if __name__ == '__main__':
             elif reading and is_abstract_ending(line):
                 reading = VOID
                 try:
-                    sentences = [sentence if args.skip_tokenization else (" ".join(word_tokenize(sentence, language=args.language))
+                    sentences = [sentence if args.skip_tokenization else (" ".join(tokenize(sentence))
                                      .replace('„', "``").replace('“', "''").replace(" ( )", ""))
                                  for sentence in sent_tokenize(abstract, "czech")]
                     if len(sentences) < 1 or len(title) < 1:
