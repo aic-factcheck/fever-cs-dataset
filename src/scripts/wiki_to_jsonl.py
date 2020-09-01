@@ -25,13 +25,17 @@ def is_article_beginning(line):
 def is_abstract_ending(line):
     return line.startswith("</doc") or (line.startswith("Section::") and not args.full)
 
+
 def tokenize(line):
     global tokenizer
+    if args.skip_tokenization:
+        return line
     if args.ptb:
         if tokenizer is None:
             tokenizer = TreebankWordTokenizer()
         return tokenizer.tokenize(line, convert_parentheses=True)
     return word_tokenize(line, language=args.language)
+
 
 if __name__ == '__main__':
     print(os.getcwd())
@@ -49,7 +53,6 @@ if __name__ == '__main__':
                         help="Use Penn Treebank word tokenizer.")
 
     args = parser.parse_args()
-    print(args.full, args.titles, args.skip_tokenization)
     Path(args.target_file).parent.mkdir(parents=True, exist_ok=True)
 
     reading, abstract, title = VOID, "", None
@@ -64,12 +67,14 @@ if __name__ == '__main__':
                 reading = VOID
                 try:
                     sentences = [sentence if args.skip_tokenization else (" ".join(tokenize(sentence))
-                                     .replace('„', "``").replace('“', "''").replace(" ( )", ""))
+                                                                          .replace('„', "``").replace('“',
+                                                                                                      "''").replace(
+                        " ( )", ""))
                                  for sentence in sent_tokenize(abstract, "czech")]
                     if len(sentences) < 1 or len(title) < 1:
                         continue
                     if args.titles:
-                        sentences = ["[ {} ]".format(title)] + sentences
+                        sentences = ["[ {} ]".format(tokenize(title))] + sentences
 
                     print(json.dumps({
                         "id": title,
